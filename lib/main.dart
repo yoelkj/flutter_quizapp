@@ -13,51 +13,55 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   
-  var _questionIndex = 0;
-  var _totalScore = 0;
-  var _questions = [];
+  int _questionIndex = 0;
+  int _nActiveQ = 0;
+  int _totalScore = 0;
+  bool _showQuiz = false;
+  List _questions = [];
+
+  @override
+  void initState() {
+    super.initState();
+    mainProvider.getData().then((data){
+      _questions = data;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'QuizApp',
       theme: ThemeData(primarySwatch: Colors.purple),
       home: Scaffold(
         appBar: AppBar(
-          title: _getTitleWd(),
+          title: Text('Questions ${(_nActiveQ > 0)?_nActiveQ:""}'),
         ),
-        body: _questionIndex < _questions.length
+        body: (_showQuiz && _questionIndex < _questions.length)
             ? QuizWidget(
                 answerQuestion: _answerQuestion,
                 questionIdx: _questionIndex,
                 questions: _questions,
               )
-            : ResultWidget(_totalScore, _resetQuiz), 
+            : ResultWidget(_totalScore, (!_showQuiz)?_initQuiz:_resetQuiz), 
+      
       ),
     );
   }
 
-  //Title widget
-  Widget _getTitleWd(){
-    return FutureBuilder(
-      future: mainProvider.getData(),
-      initialData: [],
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        
-        var snData = snapshot.data;
-        
-        _questions = snData;
-        return Text('Questions ${snData.length}');
-      },
-    );
+  //Manage states
+
+  void _initQuiz(){
+    _showQuiz = true;
+    _resetQuiz();
   }
 
-  //Manage states
   void _resetQuiz() {
     setState(() {
       _questionIndex = 0;
       _totalScore = 0;
+      _nActiveQ = _questions.length;
     });
   }
 
@@ -65,6 +69,7 @@ class _MyAppState extends State<MyApp> {
     _totalScore += score;
     setState(() {
       _questionIndex = _questionIndex + 1;
+      _nActiveQ--;
     });
   }
 

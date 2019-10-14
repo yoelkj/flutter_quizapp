@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ResultWidget extends StatelessWidget {
+  
   final int resultScore;
   final Function resetHandler;
 
@@ -19,7 +20,7 @@ class ResultWidget extends StatelessWidget {
     }else if(resultScore > 0){
       result = "You are so bad!";
     }else{
-      result = "Are you ready!";
+      result = "Are you ready?";
     }
 
     return result;
@@ -36,10 +37,12 @@ class ResultWidget extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
 
-        FlatButton(
-          child: Text( (resultPhrase == 'Are you ready!')?'Go!':'Restart'),
-          textColor: Colors.purple,
+        RaisedButton(
+          child: Text( (resultPhrase == 'Are you ready?')?'Go!':'Restart'),
+          textColor: Colors.white,
+          color: Colors.purple,
           onPressed: resetHandler,
+          shape: StadiumBorder(),
         )
 
       ],
