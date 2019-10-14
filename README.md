@@ -2,6 +2,10 @@
 
 A new Flutter project.
 
+- Load data from json files
+- Dynamic AppBar title
+- Upgrade custom result widget. Get welcome message and result message
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
